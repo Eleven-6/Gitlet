@@ -1,9 +1,9 @@
 package capers;
 
 import java.io.File;
-import static capers.Utils.*;
+import java.io.IOException;
 
-/** A repository for Capers 
+/** A repository for Capers
  * @author TODO
  * The structure of a Capers Repository is as follows:
  *
@@ -18,7 +18,7 @@ public class CapersRepository {
     static final File CWD = new File(System.getProperty("user.dir"));
 
     /** Main metadata folder. */
-    static final File CAPERS_FOLDER = null; // TODO Hint: look at the `join`
+    static final File CAPERS_FOLDER = Utils.join((".capers")); // TODO Hint: look at the `join`
                                             //      function in Utils
 
     /**
@@ -31,7 +31,14 @@ public class CapersRepository {
      *    - story -- file containing the current story
      */
     public static void setupPersistence() {
-        // TODO
+        CAPERS_FOLDER.mkdir();
+        Dog.DOG_FOLDER.mkdir();
+        File STORY_FILE = new File(".capers/story");
+        try {
+            STORY_FILE.createNewFile();
+        } catch (IOException | SecurityException exception) {
+
+        }
     }
 
     /**
@@ -40,7 +47,10 @@ public class CapersRepository {
      * @param text String of the text to be appended to the story
      */
     public static void writeStory(String text) {
-        // TODO
+        File STORY_FILE = new File(".capers/story");
+        String content = Utils.readContentsAsString(STORY_FILE);
+        Utils.writeContents(STORY_FILE, content + text + "\n");
+        System.out.println(content + text);
     }
 
     /**
@@ -49,7 +59,9 @@ public class CapersRepository {
      * Also prints out the dog's information using toString().
      */
     public static void makeDog(String name, String breed, int age) {
-        // TODO
+        Dog newDog = new Dog(name, breed, age);
+        newDog.saveDog();
+        System.out.println(newDog);
     }
 
     /**
@@ -59,6 +71,8 @@ public class CapersRepository {
      * @param name String name of the Dog whose birthday we're celebrating.
      */
     public static void celebrateBirthday(String name) {
-        // TODO
+        Dog accessDog = Dog.fromFile(name);
+        accessDog.haveBirthday();
+        accessDog.saveDog();
     }
 }
